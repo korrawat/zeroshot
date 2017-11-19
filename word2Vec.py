@@ -3,11 +3,11 @@
 
 # In[47]:
 
-
+import os
 import gzip
 import numpy as np
 import gensim
-from hierarchy_label import get_one_word, id_labels, main_word2vec, valid_one_word
+from chang_hierarchy_label import get_one_word, id_labels, valid_one_word, main_word2vec
 
 
 # In[2]:
@@ -24,13 +24,12 @@ def load_pre_trained_vector(weight_filename):
     word2id = {word:i for i, word in enumerate(words)}
     word2vec = {word:vectors[i] for i, word in enumerate(words)}
     return word2vec
-main_word2vec = load_pre_trained_vector("glove.6B.50d.txt")
 
 
 # In[78]:
 
 
-print len(main_word2vec)
+# print len(main_word2vec)
 
 
 # In[3]:
@@ -51,14 +50,14 @@ def check_availibility(word_list):
 
 
 # Load Google's pre-trained Word2Vec model.
-google_model = gensim.models.KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin.gz', binary=True)  
-def get_google_word2vec(model):
-    google_word2vec = dict()
-    vocab = model.vocab.keys()
-    for word in vocab:
-        google_word2vec[word.lower()] = model.wv[word]
-    return google_word2vec
-google_word2vec = get_google_word2vec(google_model)
+# google_model = gensim.models.KeyedVectors.load_word2vec_format('GoogleNews-vectors-negative300.bin.gz', binary=True)  
+# def get_google_word2vec(model):
+#     google_word2vec = dict()
+#     vocab = model.vocab.keys()
+#     for word in vocab:
+#         google_word2vec[word.lower()] = model.wv[word]
+#     return google_word2vec
+# google_word2vec = get_google_word2vec(google_model)
 
 
 # In[31]:
@@ -110,19 +109,19 @@ def nearest(vec, ve):
 # In[30]:
 
 
-print similarity_score("mit","harvard")
+# print similarity_score("mit","harvard")
 
 
 # In[18]:
 
 
-print get_vec("newyork")
+# print get_vec("newyork")
 
 
 # In[19]:
 
 
-print google_word2vec["white_rabbit"]
+# print google_word2vec["white_rabbit"]
 
 
 # In[10]:
@@ -166,22 +165,22 @@ def txtToDict(labelFile):
 with open("1k_synsets.txt","r") as file:
     all_ids = file.read().split()
 def index_to_1k_id(index):
-    return all_ids[index+1]
+    return all_ids[index]
 
 
 # In[20]:
 
 
-index_to_1k_id(221)
+# index_to_1k_id(221)
 
 
 # In[20]:
 
 
-dict_id_to_name_list
-dict_id_to_images
-dict_id_to_prob_dist_from_CNN
-CNN model
+# dict_id_to_name_list
+# dict_id_to_images
+# dict_id_to_prob_dist_from_CNN
+# CNN model
 
 
 # In[25]:
@@ -198,9 +197,11 @@ def get_synthetic_vec(probability_distribution, T):
         # not using # dict_id_to_prob_dist_from_CNN - the dictionary that map image's id to the dictionary of probability distribution
     '''
     #probability_distribution = dict_id_to_prob_dist_from_CNN[image_id]
-    sorted_indexs = [i[0] for i in sorted(enumerate(-probability_distribution), key=lambda x:x[1])]
+
+    # sorted_inds = [ind[0] for ind in sorted(enumerate(-probabilities), key=lambda x:x[1])]
+    sorted_indices = [i[0] for i in sorted(enumerate(-np.array(probability_distribution)), key=lambda x:x[1])]
     
-    highest_T_prediction = sorted_indexs[:T]
+    highest_T_prediction = sorted_indices[:T]
     highest_T_probability = np.array([probability_distribution[highest_T_prediction[i]] for i in range(T)])
     word_embedding_vectors = list()
     for training_id in highest_T_prediction:
@@ -217,14 +218,14 @@ def get_synthetic_vec(probability_distribution, T):
 # In[33]:
 
 
-probability_distribution = np.array([0.001]*1000)
-get_synthetic_vec(probability_distribution, 10)
+# probability_distribution = np.array([0.001]*1000)
+# get_synthetic_vec(probability_distribution, 10)
 
 
 # In[43]:
 
 
-def nearest_neighbour(label_pool, synthetic_vector, k):
+def nearest_neighbor(label_pool, synthetic_vector, k=1):
     """
     Args:
         label pool - a list of synset id from which we want to predict; each synset id must have valid-one-word
@@ -248,39 +249,38 @@ def nearest_neighbour(label_pool, synthetic_vector, k):
 # In[36]:
 
 
-word_list = list()
-with open("1k_synsets.txt","r") as training_synsets:
-    synset_ids = training_synsets.read().split()
-for synset_id in synset_ids:
-    if get_one_word(synset_id)[0] == "entity":
-        print "Emergency"
-    word_list.append(get_one_word(synset_id)[0])
-len(check_availibility(word_list))
+# word_list = list()
+# with open("1k_synsets.txt","r") as training_synsets:
+#     synset_ids = training_synsets.read().split()
+# for synset_id in synset_ids:
+#     if get_one_word(synset_id)[0] == "entity":
+#         print "Emergency"
+#     word_list.append(get_one_word(synset_id)[0])
+# len(check_availibility(word_list))
 
 
 # In[44]:
 
 
-word_list = list()
-with open("available_hop2.txt","r") as testing_synsets:
-    synset_ids = testing_synsets.read().split()
-    
-probability_distribution = np.array([0.001]*1000)
-synthetic_vec = get_synthetic_vec(probability_distribution, 10)
+# word_list = list()
 
-id_labels[nearest_neighbour(synset_ids, synthetic_vec,1)[0]] # wait what? caterpillar and cat?? 555
+    
+# probability_distribution = np.array([0.001]*1000)
+# synthetic_vec = get_synthetic_vec(probability_distribution, 10)
+
+# id_labels[nearest_neighbor(synset_ids, synthetic_vec,1)[0]] # wait what? caterpillar and cat?? 555
 
 
 # In[12]:
 
 
-id_labels["n02102480"]
+# id_labels["n02102480"]
 
 
 # In[32]:
 
 
-type(get_vec("spaniel"))
+# type(get_vec("spaniel"))
 
 
 # In[46]:
@@ -300,8 +300,54 @@ def get_accuracy(prob_dist_list, synset_id_list, label_pool, k_hit = 1):
     for index in range(num_testing):
         prob_dist = prob_dist_list[index]
         true_label = synset_id_list[index]
-        first_k_hit = nearest_neighbour(prob_dist, label_pool, k_hit)
+        first_k_hit = nearest_neighbor(label_pool, prob_dist, k_hit) #TODO wrong input?
         if true_label in first_k_hit:
             num_correct += 1
     return (num_correct/num_testing)*100.0
 
+
+def nearest_neighbor_with_threshold(probability_distribution, top_k, label_pool, threshold):
+
+    synthetic_vector = get_synthetic_vec(probability_distribution, top_k)
+    nearest_label_first_guess = nearest_neighbor(label_pool, synthetic_vector, 1)
+
+
+    new_prob_dist = [probability_distribution[i] * (max_similarity_score_vec_id(synthetic_vector, index_to_1k_id(i)) > threshold)\
+        for i in range(len(probability_distribution))]
+
+    new_synthetic_vector = get_synthetic_vec(new_prob_dist, top_k)
+    nearest_label_final_guess = nearest_neighbor(label_pool, new_synthetic_vector, 1)
+    print similarity_score(new_synthetic_vector, nearest_label_final_guess)
+    return nearest_label_final_guess
+
+def max_similarity_score_vec_id(vec, label_id):
+    max_similarity = -1000
+    names = id_labels[label_id]
+    for name in names:
+        if valid_one_word(name):
+            word_embed_name = get_vec(name)
+            similarity = similarity_score(vec, word_embed_name)
+            max_similarity = max(similarity, max_similarity)
+    return max_similarity
+
+
+if __name__ == '__main__':
+    with open("available_hop2.txt","r") as testing_synsets:
+        hop2_synset_ids = testing_synsets.read().split()
+    label_pool = hop2_synset_ids
+
+    probs_result_dir = "/Volumes/Kritkorn/results"
+    words_result_dir = '/Volumes/Kritkorn/words'
+    for probs_file in os.listdir(probs_result_dir):
+        if not probs_file.startswith('n02925666'): # buskin
+            continue
+
+        probability_distribution = np.loadtxt(os.path.join(probs_result_dir, probs_file))
+
+        threshold = 0
+        nn_id = nearest_neighbor_with_threshold(probability_distribution[1:], 10, label_pool, threshold)
+        print "%d %s" % (nn_id, id_labels[nn_id])
+
+        # print synthetic_vector
+
+    # get_accuracy()
