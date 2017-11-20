@@ -52,11 +52,12 @@ if __name__ == '__main__':
 
     count_correct, count_total = accuracy(args.threshold, args.top_t, testing_wnids, args.cnn_results_dir, args.output_dir,\
                 label_pool, args.error_log_file, args.output_log_file,\
-                debug=args.debug, top_k=args.top_k, overwrite=args.overwrite)
+                debug=args.debug, overwrite=args.overwrite, get_all_nns=args.get_all_nns, top_k=args.top_k)
 
-    if count_correct_set != 0:
-        accuracy = 1.0 * count_correct_set / count_total_set
+    if count_total != 0:
+        accuracy = 1.0 * count_correct / count_total
     else:
         accuracy = 0
+    print "Total stats for all sets in %s" % args.synset_list
     print "Accuracy: %.3f, total: %d, top %d: %d\n" %\
                     (accuracy, count_total, args.top_k, count_correct)
