@@ -4,6 +4,7 @@ sys.path.insert(0, '../models/research/slim/')
 from datasets import imagenet
 import heapq
 import os
+import timeit
 
 # download glove vectors
 # return dictionary mapping word to vector
@@ -187,7 +188,7 @@ def get_synthetic_vec(probability_distribution, T, all_ids = ALL_IDS, dic_parent
     Args:
         probability_distribution - a numpy array of size 1000 that represents the probability of being each label in 
                                    the training dataset
-        T : the number of highest probability that we will take into account when contructing the synthetic word embedding
+        T : the number of highest probability that we will take into account when constructing the synthetic word embedding
         
         # not using# id - the id of the test image
         # not using # dict_id_to_prob_dist_from_CNN - the dictionary that map image's id to the dictionary of probability distribution
@@ -238,7 +239,7 @@ def nearest_neighbor(label_pool, synthetic_vector, k, main_word2vec = MAIN_WORD2
     return nearest_labels
 
 
-def nearest_neighbor_with_threshold(probability_distribution, top_k, label_pool, threshold, T=10,\
+def nearest_neighbor_with_threshold(probability_distribution, top_k, label_pool, threshold, T,\
                                     all_ids = ALL_IDS, dic_parent = DIC_PARENT, main_word2vec = MAIN_WORD2VEC, id_labels = ID_LABELS):
 
     synthetic_vector = get_synthetic_vec(probability_distribution, T, all_ids, dic_parent, main_word2vec, id_labels)
@@ -257,38 +258,79 @@ def nearest_neighbor_with_threshold(probability_distribution, top_k, label_pool,
     return nearest_label_final_guesses
 
 
-def accuracy(threshold, testing_file, top_k = 100, all_ids = ALL_IDS, dic_parent = DIC_PARENT, main_word2vec = MAIN_WORD2VEC, id_labels = ID_LABELS,\
-            probs_result_dir, words_result_dir):
-    # e.g. testing_file = "available_hop2.txt", probs_result_dir = "/Volumes/Kritkorn/results", words_result_dir = "/Volumes/Kritkorn/words"
-    with open(testing_file,"r") as testing_synsets:
-        hop2_synset_ids = testing_synsets.read().split()
-    label_pool = hop2_synset_ids
-
-    count_total = 0
-    count_correct = 0
-    for probs_file in os.listdir(probs_result_dir):
-        probability_distribution = np.loadtxt(os.path.join(probs_result_dir, probs_file))
+def accuracy_one_synset(threshold, T, testing_wnid, probs_result_dir, words_result_dir,\
+                        label_pool, overwrite=False, get_all_nns=False, top_k = 100, all_ids = ALL_IDS, dic_parent = DIC_PARENT,\
+                        main_word2vec = MAIN_WORD2VEC, id_labels = ID_LABELS):
+    """
+        probs_result_dir - contains n*/n*_*.txt, which contains 1k lines of 
+        probabilities from CNN inference
+    """
+    probs_result_dir_synset = os.path.join(probs_result_dir, testing_wnid)
+    words_result_rank_filename = os.path.join(words_result_dir, testing_wnid + '.txt')
+    if not overwrite and os.path.exists(words_result_rank_filename):
+        return (0, 0)
+    for probs_file in os.listdir(probs_result_dir_synset):
+        print "Processing %s" % probs_file
+        probability_distribution = np.loadtxt(os.path.join(probs_result_dir_synset, probs_file))
 
         probability_distribution = probability_distribution[1:]
 
-        nns = nearest_neighbor_with_threshold(probability_distribution, top_k, label_pool, threshold, all_ids, dic_parent, main_word2vec, id_labels)
+        top_k_nns = top_k
+        if get_all_nns:
+            top_k_nns = len(label_pool)
+        print "Finding %d nearest neighbors" % top_k_nns
+        nns = nearest_neighbor_with_threshold(probability_distribution, top_k_nns, label_pool, threshold, T, all_ids, dic_parent, main_word2vec, id_labels)
         if nns is None:
             continue
         nn_ids = [x[0] for x in nns]
 
+        print "Finished finding %d nearest neighbors" % top_k_nns
         count_total += 1
         if testing_wnid in nn_ids:
-            count_correct += 1
+            rank = nn_ids.index(testing_wnid) # index starts from 0
+            if rank < top_k:
+                count_correct += 1
+            with open(words_result_rank_filename, 'a') as f:
+                f.write(probs_file + '\t' + str(rank) + '\n')
 
     return (count_correct, count_total)
 
 
+def accuracy(threshold, T, testing_wnids, probs_result_dir, words_result_dir,\
+            label_pool, error_log_file, output_log_file=None, debug=False, overwrite=False, get_all_nns=False, top_k = 100, all_ids = ALL_IDS, dic_parent = DIC_PARENT,\
+            main_word2vec = MAIN_WORD2VEC, id_labels = ID_LABELS):
+    # e.g. probs_result_dir = "/Volumes/Kritkorn/results", words_result_dir = "/Volumes/Kritkorn/words"
+    count_total = 0
+    count_correct = 0
+    for testing_wnid in testing_wnids:
+        start_time = timeit.default_timer()
+        # try:
+        count_correct_set, count_total_set = accuracy_one_synset(threshold, T, testing_wnid, probs_result_dir, words_result_dir,\
+                    label_pool, overwrite, get_all_nns, top_k, all_ids, dic_parent, main_word2vec, id_labels)
 
+        count_total += count_total_set
+        count_correct += count_correct_set
+        if count_correct_set != 0:
+            accuracy_set = 1.0 * count_correct_set / count_total_set
+        else:
+            accuracy_set = 0
 
+        end_time = timeit.default_timer()
+        elapsed_time = end_time - start_time
+        average_time = elapsed_time / count_total
+        if debug:
+            output_message = "wnid: %s\n" % testing_wnid
+            output_message += "Time: %.3f s, avg time: %.3f s\n" % (elapsed_time, average_time)
+            output_message += "Accuracy: %.3f, total: %d, top %d: %d\n" %\
+                (accuracy_set, count_total_set, top_k, count_correct_set)
+            print output_message
+            with open(output_log_file, 'a') as f:
+                f.write(output_message)
 
-
-
-
-
-
+        # except Exception as e:
+        #     with open(error_log_file, "a") as f:
+        #         f.write(testing_wnid + "\n")
+        #         f.write(str(e) + "\n")
+        #     continue
+    return (count_correct, count_total)
 
