@@ -258,8 +258,8 @@ def nearest_neighbor_with_threshold(probability_distribution, top_k, label_pool,
 
 
 def accuracy(threshold, testing_file, top_k = 100, all_ids = ALL_IDS, dic_parent = DIC_PARENT, main_word2vec = MAIN_WORD2VEC, id_labels = ID_LABELS,\
-            probs_result_dir = "/Volumes/Kritkorn/results", words_result_dir = "/Volumes/Kritkorn/words"):
-    # e.g. testing_file = "available_hop2.txt"
+            probs_result_dir, words_result_dir):
+    # e.g. testing_file = "available_hop2.txt", probs_result_dir = "/Volumes/Kritkorn/results", words_result_dir = "/Volumes/Kritkorn/words"
     with open(testing_file,"r") as testing_synsets:
         hop2_synset_ids = testing_synsets.read().split()
     label_pool = hop2_synset_ids
