@@ -318,7 +318,7 @@ def accuracy(threshold, T, testing_wnids, probs_result_dir, words_result_dir,\
 
             end_time = timeit.default_timer()
             elapsed_time = end_time - start_time
-            average_time = elapsed_time / count_total
+            average_time = elapsed_time / count_total_set
             if debug:
                 output_message = "wnid: %s\n" % testing_wnid
                 output_message += "Time: %.3f s, avg time: %.3f s\n" % (elapsed_time, average_time)
