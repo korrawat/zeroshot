@@ -34,7 +34,7 @@ def add_child(parent, child, dic_parent = {}, dic_child = {}):
 # ====================================================================
 # loading dictionary mapping word to vector
 print "Loading Glove..."
-MAIN_WORD2VEC = load_pre_trained_vector("glove.6B.50d.txt")
+MAIN_WORD2VEC = load_pre_trained_vector("glove.840B.300d.txt")
 print "Finished loading Glove"
 
 # create dictionary mapping synset to list of labels
@@ -210,6 +210,7 @@ def get_synthetic_vec(probability_distribution, T, all_ids = ALL_IDS, dic_parent
     synthetic_word_embedding_vector = np.dot(highest_T_probability/normalize_factor, word_embedding_vectors)
     return synthetic_word_embedding_vector
 
+# TODO
 def nearest_neighbor(label_pool, synthetic_vector, k, main_word2vec = MAIN_WORD2VEC, id_labels = ID_LABELS):
     """
     Args:
@@ -223,6 +224,7 @@ def nearest_neighbor(label_pool, synthetic_vector, k, main_word2vec = MAIN_WORD2
         names = id_labels[label_id]
         is_very_similar = False
         candidate_similarity = -1000
+        best_name_score = -1000
         for name in names:
             if valid_one_word(name, main_word2vec):
                 word_embed_name = get_vec(name, main_word2vec)
@@ -230,10 +232,13 @@ def nearest_neighbor(label_pool, synthetic_vector, k, main_word2vec = MAIN_WORD2
                 if similarity > k_highest_similarity_labels[0][0]:
                     is_very_similar = True
                     candidate_similarity = max(similarity, candidate_similarity)
-                    best_name = name
+                    if similarity > best_name_score:
+                        best_name_score = similarity
+                        best_name = name
         if is_very_similar:
             heapq.heapreplace(k_highest_similarity_labels,(candidate_similarity, label_id, best_name))
     nearest_labels = list()
+    k_highest_similarity_labels = sorted(k_highest_similarity_labels,key = lambda x : -x[0])
     for pair in k_highest_similarity_labels:
         nearest_labels.append((pair[1],pair[2],pair[0]))
     return nearest_labels
@@ -260,7 +265,7 @@ def nearest_neighbor_with_threshold(probability_distribution, top_k, label_pool,
 
 def accuracy_one_synset(threshold, T, testing_wnid, probs_result_dir, words_result_dir,\
                         label_pool, overwrite=False, get_all_nns=False, top_k = 100, all_ids = ALL_IDS, dic_parent = DIC_PARENT,\
-                        main_word2vec = MAIN_WORD2VEC, id_labels = ID_LABELS):
+                        main_word2vec = MAIN_WORD2VEC, id_labels = ID_LABELS, max_images_to_run=100):
     """
         probs_result_dir - contains n*/n*_*.txt, which contains 1k lines of 
         probabilities from CNN inference
@@ -272,8 +277,10 @@ def accuracy_one_synset(threshold, T, testing_wnid, probs_result_dir, words_resu
 
     count_total = 0
     count_correct = 0
-    for probs_file in os.listdir(probs_result_dir_synset):
-        print "Processing %s" % probs_file
+    if len(os.listdir(probs_result_dir_synset)) < max_images_to_run:
+    	return (0, 0)
+    for probs_file in os.listdir(probs_result_dir_synset)[:max_images_to_run]:
+        # print "Processing %s" % probs_file
         probability_distribution = np.loadtxt(os.path.join(probs_result_dir_synset, probs_file))
 
         probability_distribution = probability_distribution[1:]
