@@ -1,7 +1,5 @@
 import numpy as np
 import sys
-sys.path.insert(0, '../models/research/slim/')
-from datasets import imagenet
 import heapq
 import os
 import timeit
@@ -34,7 +32,8 @@ def add_child(parent, child, dic_parent = {}, dic_child = {}):
 # ====================================================================
 # loading dictionary mapping word to vector
 print "Loading Glove..."
-MAIN_WORD2VEC = load_pre_trained_vector("glove.840B.300d.txt")
+# MAIN_WORD2VEC = load_pre_trained_vector("../glove.6B.50d.txt")
+MAIN_WORD2VEC = None
 print "Finished loading Glove"
 
 # create dictionary mapping synset to list of labels
@@ -102,7 +101,7 @@ def is_one_word(synset, main_word2vec = MAIN_WORD2VEC, id_labels = ID_LABELS):
     labels = id_labels[synset]
     res = 1
     for label in labels:
-        if valid_one_word(label, MAIN_WORD2VEC):
+        if valid_one_word(label, main_word2vec):
             res *= 0
         else:
             res *= 1
@@ -110,21 +109,21 @@ def is_one_word(synset, main_word2vec = MAIN_WORD2VEC, id_labels = ID_LABELS):
 
 # return synset which is the most recent ancestor that has one-word label
 # ancestor including itself
-def get_recent_oneword_ancestor(synset, dic_parent = DIC_PARENT, main_word2vec = MAIN_WORD2VEC):
+def get_recent_oneword_ancestor(synset, dic_parent = DIC_PARENT, main_word2vec = MAIN_WORD2VEC, id_labels = ID_LABELS):
     level = 0
     while level >= 0:
         for ancestor in find_ancestor(synset, level, dic_parent):
-            if is_one_word(ancestor, main_word2vec):
+            if is_one_word(ancestor, main_word2vec, id_labels):
                 return ancestor
             level += 1
 
 # return any one-word label from the most recent ancestor (including itself)
 def get_one_word(synset, dic_parent = DIC_PARENT, main_word2vec = MAIN_WORD2VEC, id_labels = ID_LABELS):
-    curr = get_recent_oneword_ancestor(synset, dic_parent, main_word2vec)
+    curr = get_recent_oneword_ancestor(synset, dic_parent, main_word2vec, id_labels)
     labels = id_labels[curr]
     for label in labels:
         if valid_one_word(label, main_word2vec):
-            return label, is_one_word(synset, main_word2vec)
+            return label, is_one_word(synset, main_word2vec, id_labels)
 
 # return set of words having distance dist from node
 def hop_dist(node, dist, start_at_1 = False, dic_parent = DIC_PARENT, dic_child = DIC_CHILD):
@@ -178,8 +177,45 @@ def max_similarity_score_vec_id(vec, label_id, id_labels = ID_LABELS, main_word2
             similarity = similarity_score(vec, word_embed_name)
             max_similarity = max(similarity, max_similarity)
     if max_similarity == -1000:
-        max_similarity = similarity_score(get_vec(get_one_word(label_id, dic_parent, main_word2vec, id_labels)[0]), vec)
+        max_similarity = similarity_score(get_vec(get_one_word(label_id, dic_parent, main_word2vec, id_labels)[0], main_word2vec), vec)
     return max_similarity
+
+def create_mini_glove(glove_filename, mini_glove_output_path, id_labels = ID_LABELS):
+    '''
+    big_word2vec = load_pre_trained_vector(glove_filename)
+    mini_dict = dict()
+    for index in range(1000):
+        word_1k = get_one_word(index_to_1k_id(index))
+        mini_dict[word_1k] = big_word2vec[word_1k]
+    synset_pool = list()
+    with open(available_hop_filename) as f:
+        for line in f:
+            synset_pool.append(line[:-1])
+
+    for synset in synset_pool:
+        all_synset_labels = id_labels[synset]
+        for word in all_synset_labels:
+            if word in big_word2vec:
+                mini_dict[word] = big_word2vec[word]
+
+    '''
+    big_word2vec = load_pre_trained_vector(glove_filename)
+    mini_dict = dict()
+    for synset_id in id_labels:
+        described_words = id_labels[synset_id]
+        for word in described_words:
+            if word in big_word2vec:
+                mini_dict[word] = big_word2vec[word]
+
+    with open(mini_glove_output_path, 'w') as f:
+        for word in mini_dict:
+            word_embed = mini_dict[word]
+            line_to_be_printed = word
+            for value in word_embed:
+                line_to_be_printed += " {0:.5f}".format(value)
+            f.write(line_to_be_printed + "\n")
+
+
 
 
 
@@ -265,7 +301,7 @@ def nearest_neighbor_with_threshold(probability_distribution, top_k, label_pool,
 
 def accuracy_one_synset(threshold, T, testing_wnid, probs_result_dir, words_result_dir,\
                         label_pool, overwrite=False, get_all_nns=False, top_k = 100, all_ids = ALL_IDS, dic_parent = DIC_PARENT,\
-                        main_word2vec = MAIN_WORD2VEC, id_labels = ID_LABELS, max_images_to_run=100):
+                        main_word2vec = MAIN_WORD2VEC, id_labels = ID_LABELS):
     """
         probs_result_dir - contains n*/n*_*.txt, which contains 1k lines of 
         probabilities from CNN inference
@@ -277,9 +313,7 @@ def accuracy_one_synset(threshold, T, testing_wnid, probs_result_dir, words_resu
 
     count_total = 0
     count_correct = 0
-    if len(os.listdir(probs_result_dir_synset)) < max_images_to_run:
-    	return (0, 0)
-    for probs_file in os.listdir(probs_result_dir_synset)[:max_images_to_run]:
+    for probs_file in os.listdir(probs_result_dir_synset):
         # print "Processing %s" % probs_file
         probability_distribution = np.loadtxt(os.path.join(probs_result_dir_synset, probs_file))
 

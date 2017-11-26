@@ -30,6 +30,8 @@ def build_parser():
                         help='Get all NNs (not just top k) to output all rankings')
     parser.add_argument('-w', '--overwrite', dest='overwrite', action='store_true',
                         help='overwrite inference results')
+    parser.add_argument('-f', '--filepath_word_embedding', dest='filepath_word_embedding',
+    					help='filepath of word embedding model')
     return parser
 
 
@@ -50,9 +52,12 @@ if __name__ == '__main__':
     with open(args.synset_list, "r") as testing_synsets:
         testing_wnids = testing_synsets.read().split()
 
+    main_word2vec = load_pre_trained_vector(args.filepath_word_embedding)
+    
     count_correct, count_total = accuracy(args.threshold, args.top_t, testing_wnids, args.cnn_results_dir, args.output_dir,\
                 label_pool, args.error_log_file, args.output_log_file,\
-                debug=args.debug, overwrite=args.overwrite, get_all_nns=args.get_all_nns, top_k=args.top_k)
+                debug=args.debug, overwrite=args.overwrite, get_all_nns=args.get_all_nns, top_k=args.top_k, \
+                main_word2vec = main_word2vec)
 
     if count_total != 0:
         accuracy = 1.0 * count_correct / count_total
