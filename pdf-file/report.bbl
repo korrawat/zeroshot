@@ -1,0 +1,65 @@
+\begin{thebibliography}{7}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Deng et~al.(2009)Deng, Dong, Socher, Li, Li, and
+  Fei-Fei]{imagenet_cvpr09}
+Deng, J., Dong, W., Socher, R., Li, L.-J., Li, K., and Fei-Fei, L.
+\newblock {ImageNet: A Large-Scale Hierarchical Image Database}.
+\newblock In \emph{CVPR09}, 2009.
+
+\bibitem[Frome et~al.(2013)Frome, Corrado, Shlens, Bengio, Dean, Ranzato, and
+  Mikolov]{devise}
+Frome, Andrea, Corrado, Greg~S, Shlens, Jon, Bengio, Samy, Dean, Jeff, Ranzato,
+  Marc~Aurelio, and Mikolov, Tomas.
+\newblock Devise: A deep visual-semantic embedding model.
+\newblock In Burges, C. J.~C., Bottou, L., Welling, M., Ghahramani, Z., and
+  Weinberger, K.~Q. (eds.), \emph{Advances in Neural Information Processing
+  Systems 26}, pp.\  2121--2129. Curran Associates, Inc., 2013.
+\newblock URL
+  \url{http://papers.nips.cc/paper/5204-devise-a-deep-visual-semantic-embedding-model.pdf}.
+
+\bibitem[Lampert et~al.(2009)Lampert, Nickisch, and Harmeling]{cvpr}
+Lampert, C., Nickisch, H., and Harmeling, S.
+\newblock Learning to detect unseen object classes by between-class attribute
+  transfer.
+\newblock In \emph{Conference on Computer Vision and Pattern Recognition
+  (CVPR)}, 2009.
+
+\bibitem[Norouzi et~al.(2014)Norouzi, Mikolov, Bengio, Singer, Shlens, Frome,
+  Corrado, and Dean]{conse}
+Norouzi, Mohammad, Mikolov, Tomas, Bengio, Samy, Singer, Yoram, Shlens,
+  Jonathon, Frome, Andrea, Corrado, Greg, and Dean, Jeffrey.
+\newblock Zero-shot learning by convex combination of semantic embeddings.
+\newblock In \emph{International Conference on Learning Representations}, 2014.
+\newblock URL \url{http://arxiv.org/abs/1312.5650}.
+
+\bibitem[Pennington et~al.(2014)Pennington, Socher, and
+  Manning]{pennington2014glove}
+Pennington, Jeffrey, Socher, Richard, and Manning, Christopher~D.
+\newblock Glove: Global vectors for word representation.
+\newblock In \emph{Empirical Methods in Natural Language Processing (EMNLP)},
+  pp.\  1532--1543, 2014.
+\newblock URL \url{http://www.aclweb.org/anthology/D14-1162}.
+
+\bibitem[Socher et~al.(2013)Socher, Ganjoo, Manning, and Ng]{cross-modal}
+Socher, Richard, Ganjoo, Milind, Manning, Christopher~D., and Ng, Andrew~Y.
+\newblock Zero-shot learning through cross-modal transfer.
+\newblock In \emph{Proceedings of the 26th International Conference on Neural
+  Information Processing Systems - Volume 1}, NIPS'13, pp.\  935--943, USA,
+  2013. Curran Associates Inc.
+\newblock URL \url{http://dl.acm.org/citation.cfm?id=2999611.2999716}.
+
+\bibitem[Szegedy et~al.(2015)Szegedy, Liu, Jia, Sermanet, Reed, Anguelov,
+  Erhan, Vanhoucke, and Rabinovich]{inceptionv1}
+Szegedy, Christian, Liu, Wei, Jia, Yangqing, Sermanet, Pierre, Reed, Scott,
+  Anguelov, Dragomir, Erhan, Dumitru, Vanhoucke, Vincent, and Rabinovich,
+  Andrew.
+\newblock Going deeper with convolutions.
+\newblock In \emph{Computer Vision and Pattern Recognition (CVPR)}, 2015.
+\newblock URL \url{http://arxiv.org/abs/1409.4842}.
+
+\end{thebibliography}
