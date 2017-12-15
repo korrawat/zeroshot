@@ -1,0 +1,66 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{devise,cvpr,cross-modal}
+\citation{conse}
+\citation{conse}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Contributions}{2}{subsection.1.1}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Problem Statement}{2}{section.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Models}{2}{section.3}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}ConSE Model}{2}{subsection.3.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Threshold Model}{2}{subsection.3.2}}
+\citation{inceptionv1}
+\newlabel{fig:pipeline}{{3.1}{3}{}{subsection.3.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces  Procedure of ConSE Model. The input as a picture is parsed into the model. The model then uses CNN to compute the probability distribution of categories that are similar to the input. Then, we convert each category into word embedding and compute its weighted average. Finally, we return the label that is nearest to this average. }}{3}{figure.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Diagram illustrates the comparison between baseline and deviated model. The blue items represent the labels used to predict the result. The left hand side figure shows wrong predicted label (represented by yellow item) in the baseline model that can be improved by deviated model. The right hand side figure shows that deviated model will include substantial difference label and might lead to actual label (represented by green item)  }}{3}{figure.2}}
+\newlabel{fig:thm}{{2}{3}{Diagram illustrates the comparison between baseline and deviated model. The blue items represent the labels used to predict the result. The left hand side figure shows wrong predicted label (represented by yellow item) in the baseline model that can be improved by deviated model. The right hand side figure shows that deviated model will include substantial difference label and might lead to actual label (represented by green item)}{figure.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Deviated Model}{3}{subsection.3.3}}
+\newlabel{model:deviated}{{3.3}{3}{}{subsection.3.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Implementation Details}{3}{section.4}}
+\citation{pennington2014glove}
+\citation{imagenet_cvpr09}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Results}{4}{section.5}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Evaluation Metric}{4}{subsection.5.1}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Effects of word embeddings on performance of the baseline model}}{5}{table.1}}
+\newlabel{tab:wordemb}{{1}{5}{Effects of word embeddings on performance of the baseline model}{table.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Effects of word embeddings on the performance}{5}{subsection.5.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Importance of convex combination}{5}{subsection.5.3}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Effects of $T$ on the performance of the baseline model.}}{5}{figure.3}}
+\newlabel{fig:tt}{{3}{5}{Effects of $T$ on the performance of the baseline model}{figure.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Threshold Model}{5}{subsection.5.4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Effects of threshold $\tau $ on the performance of the baseline model.}}{6}{figure.4}}
+\newlabel{fig:threshold}{{4}{6}{Effects of threshold $\tau $ on the performance of the baseline model}{figure.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Deviated Model}{6}{subsection.5.5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Comparison of hit rate of deviated model and the baseline model.}}{6}{figure.5}}
+\newlabel{fig:m3plot}{{5}{6}{Comparison of hit rate of deviated model and the baseline model}{figure.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Other Observations}{6}{subsection.5.6}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Hit@5 by word category. 840B 300d. A: ConSE, B: threshold $\tau = 0.2$, C: $r=5.$}}{6}{table.2}}
+\newlabel{tab:category}{{2}{6}{Hit@5 by word category. 840B 300d. A: ConSE, B: threshold $\tau = 0.2$, C: $r=5.$}{table.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{6}{section.6}}
+\bibdata{cit}
+\bibcite{imagenet_cvpr09}{{1}{2009}{{Deng et~al.}}{{Deng, Dong, Socher, Li, Li, and Fei-Fei}}}
+\bibcite{devise}{{2}{2013}{{Frome et~al.}}{{Frome, Corrado, Shlens, Bengio, Dean, Ranzato, and Mikolov}}}
+\bibcite{cvpr}{{3}{2009}{{Lampert et~al.}}{{Lampert, Nickisch, and Harmeling}}}
+\bibcite{conse}{{4}{2014}{{Norouzi et~al.}}{{Norouzi, Mikolov, Bengio, Singer, Shlens, Frome, Corrado, and Dean}}}
+\bibcite{pennington2014glove}{{5}{2014}{{Pennington et~al.}}{{Pennington, Socher, and Manning}}}
+\bibcite{cross-modal}{{6}{2013}{{Socher et~al.}}{{Socher, Ganjoo, Manning, and Ng}}}
+\bibcite{inceptionv1}{{7}{2015}{{Szegedy et~al.}}{{Szegedy, Liu, Jia, Sermanet, Reed, Anguelov, Erhan, Vanhoucke, and Rabinovich}}}
+\bibstyle{plain}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Examples of our models, based on 840B 300d word embeddings. Blue refers to selected labels in threshold $\tau =0.0$ model, and pink refers to selected labels in the $r=3$ Deviated Model. ``Sim'' refers to the cosine similarity between each word label and the first synthetic vector.}}{8}{table.3}}
+\newlabel{tab:example}{{3}{8}{Examples of our models, based on 840B 300d word embeddings. Blue refers to selected labels in threshold $\tau =0.0$ model, and pink refers to selected labels in the $r=3$ Deviated Model. ``Sim'' refers to the cosine similarity between each word label and the first synthetic vector}{table.3}{}}

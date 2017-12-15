@@ -1,0 +1,16 @@
+\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Contributions}{section.1}% 2
+\BOOKMARK [1][-]{section.2}{Problem Statement}{}% 3
+\BOOKMARK [1][-]{section.3}{Models}{}% 4
+\BOOKMARK [2][-]{subsection.3.1}{ConSE Model}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.2}{Threshold Model}{section.3}% 6
+\BOOKMARK [2][-]{subsection.3.3}{Deviated Model}{section.3}% 7
+\BOOKMARK [1][-]{section.4}{Implementation Details}{}% 8
+\BOOKMARK [1][-]{section.5}{Results}{}% 9
+\BOOKMARK [2][-]{subsection.5.1}{Evaluation Metric}{section.5}% 10
+\BOOKMARK [2][-]{subsection.5.2}{Effects of word embeddings on the performance}{section.5}% 11
+\BOOKMARK [2][-]{subsection.5.3}{Importance of convex combination}{section.5}% 12
+\BOOKMARK [2][-]{subsection.5.4}{Threshold Model}{section.5}% 13
+\BOOKMARK [2][-]{subsection.5.5}{Deviated Model}{section.5}% 14
+\BOOKMARK [2][-]{subsection.5.6}{Other Observations}{section.5}% 15
+\BOOKMARK [1][-]{section.6}{Conclusion}{}% 16
